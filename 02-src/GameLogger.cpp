@@ -10,7 +10,7 @@ GameLogger::GameLogger(const string filename)
 GameLogger::~GameLogger()
 {
     if(outData.is_open())
-        outData.close();
+        outData.close(); 
 }
 
 void GameLogger::logBoardSize(int boardSize)
