@@ -1,22 +1,16 @@
-# Suicide Checkers ♟️
+## **Suicide Checkers (Losing Draughts) ♟️**
 
-*A C++17 console simulation of the suicide variant of checkers where losing is winning, between two different AI.*
+This project is a **C++ console-based implementation of Suicide Checkers (also known as Losing Draughts)**, a variant of checkers in which the goal is to lose all pieces or reach a position where no legal moves remain.
 
-The program:
-
-* Reads a list of board sizes (`n × n` where 6 ≤ n ≤ 12) from a file named `input.txt`.
-* Simulates games between the two algorithms for each board size.
-* Records all moves and final results in an output file `results.txt`.
+The project was originally created during my time at university and is now being revisited as part of an effort to **strengthen my software development fundamentals**. Rather than focusing on adding new features, the emphasis is on improving structure, clarity, and correctness while working within an existing codebase.
 
 ---
 
-## ️⃣ Project Goals / Motivation
+## **Project overview**
 
-As mentioned in the main page, many of the projects here were originally completed during my time at university and I am now revisiting them with a more 
-professional mindset.
+The game models a standard checkers board, pieces, and turn-based gameplay while enforcing the specific rules of Suicide Checkers. The core challenge of the project lies in correctly handling legal moves, forced captures, promotions, and win conditions, all while keeping the code readable and maintainable.
 
-Suicide Checkers is one of those projects I chose to revisit. The project was meant to expose us to many key aspects of engineering and software 
-development. In revisiting these projects, my aim is not just to write functional code, but to also explore professional software engineering practices.
+The project is intentionally console-based to keep the focus on **logic, state management, and rule enforcement**, rather than user interface concerns.
 
 ---
 
@@ -86,127 +80,35 @@ Move Notation:
 
 ---
 
-## Requirements Extraction
+## **🧩What this project explores**
 
-This section formalizes the problem definition from the original brief into structured functional and non-functional requirements.
-Functional requirements describe what the system must do, while non-functional requirements capture how well it should perform.
-Extracting them clearly establishes traceability from the problem statement to the implementation.
+This project is being used to practice and reinforce:
 
-### Functional Requirements
+* Representing game state (board, pieces, current player) in C++
+* Implementing and validating complex rule sets
+* Handling edge cases such as forced captures and no-move conditions
+* Applying object-oriented concepts such as encapsulation and clear responsibility boundaries
+* Gradually refactoring earlier code to reduce duplication and improve readability
+* Debugging and reasoning about behaviour in a non-trivial codebase
 
-* Read board sizes from `input.txt`.
-* Validate sizes (even number, 6–12).
-* Simulate a full Suicide Checkers game per size.
-* Two autonomous AIs must compete.
-* Compulsory captures must be enforced.
-* Log all moves and results to `results.txt`.
-
-### Non-Functional Requirements
-
-* No console I/O.
-* No global variables.
-* Must compile under `-std=c++17`.
-* Should complete all runs in <30 seconds.
+The goal is not to produce a perfect solution, but to **develop a clearer and more disciplined approach** to building and improving software.
 
 ---
 
-## Implementation
+## **🥅Why revisit this project**
 
-### Approach
+Reworking this project provides an opportunity to reflect on earlier design decisions and to improve them with a stronger understanding of programming fundamentals. It also encourages working incrementally — making small, testable changes and verifying behaviour as the code evolves.
 
-The implementation focused on modularity, reusability, and clarity rather than quick fixes. Each module handles a single concern, and communication 
-between them happens through well-defined interfaces.
-
-Key design aims:
-
-* Clearly defined responsibilities per class.
-* Consistent and reproducible file-based I/O.
-* Expandable AI framework for multiple strategies and difficulty levels.
-* Avoiding global state.
-* Clean separation between *game engine*, *rules*, and *AI*.
+This mirrors how real-world codebases are often improved: not through rewrites, but through **careful iteration and refinement**.
 
 ---
 
-## 🧩 System Overview
+## **Current state and direction**
 
-This section outlines the major subsystems and their roles in the simulation. The system was broken down into multiple layers, each abstracting a specific 
-responsibility to make the program easier to test, extend, or replace without breaking other parts.
-
-| Layer       | Purpose                                     | Key Classes                           |
-| ----------- | ------------------------------------------- | ------------------------------------- |
-| Input Layer | Reads and validates board sizes             | `InputHandler`                        |
-| Game Engine | Manages board state, moves, and turns       | `GameManager`, `Board`, `Rules`       |
-| AI Layer    | Encapsulates decision logic for each player | `PlayerType`, `SuicideAI`, `RandomAI` |
-| Evaluation  | Determines when the game ends and who wins  | `ResultEvaluator`                     |
-| Logging     | Records all moves and results               | `GameLogger`                          |
-
----
-
-## 🧱 Architecture Summary
-
-The architecture was designed around **clear responsibility boundaries**. Each module has a narrow, explicit purpose and interacts through minimal shared 
-state. This promotes easier debugging and independent evolution of features.
-
-| Module          | Description                                                                                                     |
-| --------------- | --------------------------------------------------------------------------------------------------------------- |
-| main.cpp        | Entry point, loads input & starts simulations.                                                                  |
-| InputHandler    | Parses and filters board sizes from file.                                                                       |
-| GameManager     | Controls turn order, move execution, crowning, continuations.                                                   |
-| Board           | Stores and updates board state.                                                                                 |
-| BoardMapper     | Converts board coordinates ↔ square IDs.                                                                        |
-| Rules           | Generates legal moves, enforces mandatory capture.                                                              |
-| PlayerType      | Base class for players; defines common interface.                                                               |
-| SuicideAI       | Attempts to lose pieces strategically.                                                                          |
-| RandomAI        | Selects random valid moves for baseline comparison.                                                             |
-| ResultEvaluator | Determines terminal conditions and winner.                                                                      |
-| GameLogger      | Writes every move and final results to file.                                                                    |
-| Move            | Core struct used to represent a single move (from, to, and captured piece). Shared across AI and rules modules. |
-| EndResults      | Defines result data (token counts, winner, and reason) used by `ResultEvaluator` and `GameLogger`.              |
-
-
----
-
-## ⚙️ How Modules Interact
-
-The diagram below shows the data and control flow among core components. The arrows represent dependencies and data passing between modules.
-
-```
-input.txt
- ↓
-InputHandler
- ↓
-GameManager → Rules → BoardMapper
- ↓           ↓
-Players (AI implementations)
- ↓
-ResultEvaluator
- ↓
-GameLogger → results.txt
-```
-
----
-
-## ⚙️ Design Principles & Decisions
-
-This project followed several key software design principles to ensure maintainability and extensibility:
-
-* **Pure modularity** - no global variables.
-* **Separation of concerns** - each class focuses on a single task.
-* **Stateless rule enforcement** - `Rules` and `BoardMapper` are reusable across game types.
-* **Board as the source of truth** - ensures consistent, synchronized game state.
-* **AI pluggability** - new player strategies can be added without modifying the core engine.
-* **File-driven execution** - allows fully automated testing with no console interaction.
-
----
-
-### 🏁 How to Run
-
-```bash
-git clone https://github.com/Mahlatse-Seloane/Suicide-Checkers.git
-cd SuicideCheckers
-g++ -std=c++17 src/*.cpp -o suicide_checkers
-./suicide_checkers
-```
+* Fully playable console-based implementation
+* Implements standard Suicide Checkers rules
+* Ongoing refactoring focused on correctness, clarity, and simplicity
+* Future work will continue to prioritise learning and code quality over feature expansion
 
 ---
 
@@ -241,69 +143,11 @@ SuicideCheckers/
 
 ---
 
-### Key Design Decisions
+### 🏁 How to Run
 
-This section highlights specific technical and architectural choices made during development. Each decision was guided by the goal of producing 
-maintainable, modular, and testable software, not just functional output. These design decisions were important because they helped structure the project 
-in a way that clearly separates responsibilities, makes debugging simpler, and supports future extensions such as new AI types or rule variants.
-
-* Mandatory capture logic implemented inside `Rules` for engine clarity.
-  → Keeps `GameManager` focused on flow control rather than game logic details.
-
-* Board stored as characters for lightweight representation.
-  → Simplifies debugging and output logging, while keeping the format compatible with text-based files.
-
-* `SuicideAI` favors self-sacrificing or exposure moves.
-  → Provides behavior aligned with the core objective of Suicide Checkers, distinguishing it from standard play.
-
-* Random AI provides baseline unpredictability for comparison.
-  → Offers a benchmark against which more advanced AI strategies can be tested and improved.
-
----
-
-## 💡 Reflection
-
-Rebuilding this project helped deepen my understanding of:
-
-* Architectural design
-* AI behavior modeling
-* State management
-* Simulation-driven development
-* Applying professional engineering thinking to academic projects
-
-This project marks a shift from “making it work” to **making it maintainable**, balancing clarity, scalability, and correctness.
-
----
-
-## 🚀 Next Steps
-
-* 🤖 Expand AI intelligence (heuristics, evaluation functions, or search-based strategies).
-* 🎮 Runtime mode selection (allow the user to choose between Suicide or Normal Checkers).
-* 🧍‍♂️ Add player choice: human vs AI or AI vs AI.
-* 👑 Extend and stress-test king logic for advanced rule cases.
-
----
-
-## Technologies Used
-
-| Language | Tools             |
-| -------- | ----------------- |
-| C++17    | g++, Code::Blocks |
-
----
-
-## 👤 Author
-
-**Mahlatse Seloane**
-BEngSc (Digital Arts) - Wits University
-Game Developer / Software Developer
-
-> A university project revisited with a professional engineering mindset.
-
----
-
-## 🪪 License
-
-MIT - free for learning & research use.
-
----
+```bash
+git clone https://github.com/Mahlatse-Seloane/Suicide-Checkers.git
+cd SuicideCheckers
+g++ -std=c++17 src/*.cpp -o suicide_checkers
+./suicide_checkers
+```
