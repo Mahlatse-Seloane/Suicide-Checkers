@@ -2,7 +2,7 @@
 
 This project is a **C++ console-based implementation of Suicide Checkers (also known as Losing Draughts)**, a variant of checkers in which the goal is to lose all pieces or reach a position where no legal moves remain.
 
-The project was originally created during my time at university and is now being revisited as part of an effort to **strengthen my software development fundamentals**. Rather than focusing on adding new features, the emphasis is on improving structure, clarity, and correctness while working within an existing codebase.
+The project was originally created during my time at university and is now being revisited as part of an effort to strengthen my software development fundamentals, particularly around program structure, state management, and rule-driven logic. Rather than focusing on adding new features, the emphasis is on improving structure, clarity, and correctness while working within an existing codebase.
 
 ---
 
@@ -90,6 +90,7 @@ This project is being used to practice and reinforce:
 * Applying object-oriented concepts such as encapsulation and clear responsibility boundaries
 * Gradually refactoring earlier code to reduce duplication and improve readability
 * Debugging and reasoning about behaviour in a non-trivial codebase
+* Understanding how small design decisions compound as a codebase grows
 
 The goal is not to produce a perfect solution, but to **develop a clearer and more disciplined approach** to building and improving software.
 
